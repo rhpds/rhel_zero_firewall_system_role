@@ -1,0 +1,51 @@
+In this challenge we’ll open port 9999 on `+rhelvm+`.
+
+In the `+rhel+` terminal, add the lines `+- port: ['9999/tcp']+` and
+`+state: enabled+` to the `+hosts+` file.
+
+all: hosts: rhelvm: vars: firewall: - service: http state: enabled -
+port: ['`9999/tcp`'] state: enabled
+
+....
+
+The following command will add those lines for you.
+
+```bash
+tee -a /root/hosts << EOF
+      - port: ['9999/tcp']
+        state: enabled
+EOF
+....
+
+Now run the playbook in the `+rhel+` terminal.
+
+[source,bash]
+----
+ansible-playbook -i hosts -b firewall.yml
+----
+
+.applyportopen
+image::applyportopen.png[applyportopen]
+
+In the `+rhelvm+` terminal, run `+nc+`, listening on port 9999.
+
+[source,bash]
+----
+nc -l 9999
+----
+
+In the `+rhel+` terminal, run `+nc+` and then type some stuff.
+
+[source,bash]
+----
+nc rhelvm 9999
+----
+
+.ncport9999
+image::ncport9999.png[ncport9999]
+
+In the image above the phrase was typed:
+`+the quick brown fox jumps over the lazy dogs+` followed by the
+`+enter+` key.
+
+Type `+ctrl-c+` to exit `+nc+`.

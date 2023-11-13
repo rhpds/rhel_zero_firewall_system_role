@@ -1,0 +1,31 @@
+slug: firewall-system-role
+id: upbhehfqbd0l
+title: Configure firewalls with RHEL System Roles
+description: |
+  Learn how to configure your host's firewall with RHEL System
+  Roles.
+
+  # Tasks included in this scenario:
+  * Install RHEL System Roles.
+  * Open the Web Console port.
+  * Open an arbitrary port.
+  * Configure port forwarding.
+
+  Please read this blog post for more technical details on using the firewall system role.
+  https://www.redhat.com/en/blog/automating-firewall-configuration-rhel-system-roles
+
+  Automation can help increase efficiency, save time, and improve consistency, which is why Red Hat Enterprise Linux (RHEL) includes features that help automate many tasks. RHEL 9.0 and 8.6 introduce a new firewall RHEL System Role for automating the management of the RHEL firewall.
+icon: https://storage.googleapis.com/instruqt-frontend/img/tracks/default.png
+tags:
+- systemrole
+- rhel
+owner: rhel
+developers:
+- myee@redhat.com
+show_timer: true
+skipping_enabled: true
+lab_config:
+  overlay: false
+  width: 33
+  position: right
+checksum: "11818785885484496539"
