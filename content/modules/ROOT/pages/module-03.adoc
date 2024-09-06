@@ -1,17 +1,15 @@
 In this challenge, we will enable access to the http port 80 on
-`+rhelvm+`.
+`rhelvm`.
 
 First, we’ll prove to ourselves that port 80 is blocked by the firewall
-running on `+rhelvm+`.
+running on `rhelvm`.
 
-Switch to the `+rhelvm+` terminal by clicking on the rhelvm tab.
+Switch to the link:tab-1[button label=``rhelvm''] terminal by clicking
+on this button: link:tab-1[button label=``rhelvm''].
 
-.rhelvm tab
-image::rhelvm-tab.png[rhelvm tab]
+Run the following in link:tab-1[button label=``rhelvm''].
 
-Run the following in `+rhelvm+`.
-
-[source,bash]
+[source,bash,run]
 ----
 firewall-cmd --list-all
 ----
@@ -21,11 +19,10 @@ image::fwcmdno80.png[fwcmdno80]
 
 The output above shows that port 80 is not open.
 
-In the `+rhelvm+` terminal, run `+nc -l 80+`. This command runs the
-utility `+netcat+` and tells it to listen for incoming traffic on port
-80.
+In the `rhelvm` terminal, run `nc -l 80`. This command runs the utility
+`netcat` and tells it to listen for incoming traffic on port 80.
 
-[source,bash]
+[source,bash,run]
 ----
 nc -l 80
 ----
@@ -33,15 +30,18 @@ nc -l 80
 .nclistening
 image::nclistening.png[nclistening]
 
-`+netcat+` is now listening on port 80 on `+rhelvm+`. **_Do not exit out
-of `+nc+` in this terminal!_**
+`netcat` is now listening on port 80 on `rhelvm`.
 
-Switch back to the `+rhel+` terminal.
+____
+[!WARNING] Do not exit out of `nc` in this terminal!
+____
 
-Enter the command `+nc rhelvm 80+`. This tells `+netcat+` to connect to
-port 80 on `+rhelvm+`.
+Switch back to the link:tab-0[button label=``controlnode''] terminal.
 
-[source,bash]
+Enter the command `nc rhelvm 80`. This tells `netcat` to connect to port
+80 on `rhelvm`.
+
+[source,bash,run]
 ----
 nc rhelvm 80
 ----
@@ -49,20 +49,18 @@ nc rhelvm 80
 .noroute
 image::no-route.png[noroute]
 
-`+netcat+` cannot connect to `+rhelvm+` on port 80.
+`netcat` cannot connect to `rhelvm` on port 80.
 
-Let’s use RHEL systems roles to open up port 80 on `+rhelvm+`.
+Let’s use RHEL systems roles to open up port 80 on `rhelvm`.
 
-First, Ansible requires a host file pointing at the `+rhelvm+` host. The
+First, Ansible requires a host file pointing at the `rhelvm` host. The
 host file looks like this.
 
-all: hosts: rhelvm: vars: firewall: - service: http state: enabled
+Copy and paste the following into the link:tab-0[button
+label=``controlnode''] terminal.
 
-....
-
-Copy and paste the following into the `rhel` terminal.
-
-```bash
+[source,bash,run]
+----
 tee -a /root/hosts << EOF
 all:
   hosts:
@@ -72,19 +70,14 @@ all:
       - service: http
         state: enabled
 EOF
-....
-
-Remember to type `+enter+`.
+----
 
 Next, we’ll create a simple Ansible playbook that tells ansible to apply
 the RHEL Firewall system role.
 
-* name: Configure Firewall hosts: all roles:
-** redhat.rhel_system_roles.firewall ```
-
 Copy paste and run the following in the CLI.
 
-[source,bash]
+[source,bash,run]
 ----
 tee -a /root/firewall.yml <<EOF
 - name: Configure Firewall
@@ -94,10 +87,10 @@ tee -a /root/firewall.yml <<EOF
 EOF
 ----
 
-Now we’ll apply the system role to `+rhelvm+` by running the following
-command on `+rhel+`.
+Now we’ll apply the system role to `rhelvm` by running the following
+command on link:tab-0[button label=``controlnode''] .
 
-[source,bash]
+[source,bash,run]
 ----
 ansible-playbook -i hosts -b firewall.yml
 ----
@@ -105,27 +98,29 @@ ansible-playbook -i hosts -b firewall.yml
 .applysystemrole
 image::applysystemrole.png[applysystemrole]
 
-Run `+nc rhelvm 80+` in the `+rhel+` terminal again.
+Run `nc rhelvm 80` in the link:tab-0[button label=``controlnode'']
+terminal again.
 
-[source,bash]
+[source,bash,run]
 ----
 nc rhelvm 80
 ----
 
 We’ll type something into the terminal and hit enter. You should see it
-printed out in the `+rhelvm+` terminal.
+printed out in the link:tab-1[button label=``rhelvm''] terminal.
 
 .ncresult80
 image::ncport80.png[ncresult80]
 
-Exit out of `+nc+` in the `+rhel+` terminal by typing `+ctrl-c+`. This
-will cause `+nc+` to exit in `+rhelvm+`.
+Exit out of `nc` in the link:tab-0[button label=``controlnode'']
+terminal by typing `ctrl-c`. This will cause `nc` to exit in
+link:tab-1[button label=``rhelvm''].
 
-Finally, we’ll use `+firewall-cmd+` to list the open ports on
-`+rhelvm+`. Switch to the `+rhelvm+` terminal and type the following
-command.
+Finally, we’ll use `firewall-cmd` to list the open ports on
+link:tab-1[button label=``rhelvm'']. Switch to the link:tab-1[button
+label=``rhelvm''] terminal and run the following command.
 
-[source,bash]
+[source,bash,run]
 ----
 firewall-cmd --list-all
 ----

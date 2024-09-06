@@ -1,13 +1,14 @@
 Now we’ll install system roles.
 
-Click the `+rhel+` terminal session tab.
+Switch to the link:tab-0[button label=``controlnode''] terminal by
+clicking on this button: link:tab-0[button label=``controlnode'']
 
 .rhel tab
 image::rhel-tab.png[rhel tab]
 
 Enter the following command.
 
-[source,bash]
+[source,bash,run]
 ----
 dnf install rhel-system-roles -y
 ----
