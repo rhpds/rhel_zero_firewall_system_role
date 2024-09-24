@@ -19,6 +19,13 @@ antora:
     - name: module-07
       label: Module 7
 tabs:
-  - name: terminal
+  - name: ">_ bastion"
     port: 443
-    path: /wetty
+    path: /tty1
+    user: root
+    host: bastion
+  - name: ">_ rhelvm"
+    port: 443
+    path: /tty2
+    user: root
+    host: rhelvm
