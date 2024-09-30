@@ -11,6 +11,8 @@ In this lab, we will use the host `*controlnode*` as the `*control node*`
 or the node where we will install and run the firewall system role.
 Firewall changes will be applied to `*rhelvm*`.
 
+IMPORTANT: You will frequently switch between these two systems. Ensure to read the instructions closely to execute commands on the correct system.
+
 We’ll perform the following 3 tasks.
 
 [arabic]

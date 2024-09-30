@@ -1,6 +1,6 @@
 Now we’ll install system roles.
 
-Switch to the `*>_ controlnode* terminal by
+Switch to the `*>_ controlnode*` terminal by
 clicking on this button:
 
 .control tab
@@ -18,7 +18,7 @@ dnf install rhel-system-roles -y
 [source,text]
 ----
 <<< OUTPUT ABRIDGED >>>
-Total                                                           15 MB/s | 3.5 MB     00:00
+Total                                     15 MB/s | 3.5 MB     00:00
 Running transaction check
 Transaction check succeeded.
 Running transaction test

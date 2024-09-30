@@ -1,4 +1,4 @@
-In this challenge, we will enable access to the http port 80 on
+Next, we will enable access to the http port 80 on
 `*rhelvm*`.
 
 First, we’ll prove to ourselves that port 80 is blocked by the firewall
@@ -59,7 +59,7 @@ nc -l 80
 
 IMPORTANT: The `*nc*` command continues listening until cancled. Do not exit out of `*nc*` in this terminal until instructed to do so.
 
-Switch back to the `*>_ controlnode*' terminal.
+Switch back to the `*>_ controlnode*` terminal.
 
 Enter the command `*nc rhelvm 80*`. This tells `netcat` to connect to port
 80 on `*rhelvm*`.
@@ -84,7 +84,7 @@ Use the recently installed RHEL systems roles to open up port 80 on `*rhelvm*`.
 First, Ansible requires a host file pointing at the `*rhelvm*` host. The
 host file looks like this.
 
-Copy and paste the following into the `*>_ controlnode*' terminal.
+Copy and paste the following into the `*>_ controlnode*` terminal.
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
@@ -117,7 +117,7 @@ EOF
 ----
 
 Now we’ll apply the system role to `*rhelvm*` by running the following
-command on `*>_ controlnode*'
+command on `*>_ controlnode*`
 
 .Command
 [source,bash,subs="+macros,+attributes",role=execute]
