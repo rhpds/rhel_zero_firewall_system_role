@@ -5,25 +5,25 @@ antora:
   dir: www
   modules:
     - name: index
-      label: Module 1
+      label: Introduction to the lab
     - name: module-02
-      label: Module 2
+      label: Install System Roles
     - name: module-03
-      label: Module 3
+      label: Enable access to the httpd service
     - name: module-04
-      label: Module 4
+      label: Open an arbitrary port
     - name: module-05
-      label: Module 5
+      label: Configure port forwarding
     - name: module-06
-      label: Module 6
+      label: Reset the firewall to default settings
     - name: module-07
-      label: Module 7
+      label: Conclusion
 tabs:
-  - name: ">_ bastion"
+  - name: ">_ controlnode"
     port: 443
     path: /tty1
     user: root
-    host: bastion
+    host: controlnode
   - name: ">_ rhelvm"
     port: 443
     path: /tty2
