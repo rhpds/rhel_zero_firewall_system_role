@@ -1,19 +1,35 @@
 Now we’ll install system roles.
 
-Switch to the link:tab-0[button label=``controlnode''] terminal by
-clicking on this button: link:tab-0[button label=``controlnode'']
+Switch to the `*>_ controlnode* terminal by
+clicking on this button:
 
-.rhel tab
-image::rhel-tab.png[rhel tab]
+.control tab
+image::control-tab.png[control tab]
 
 Enter the following command.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 dnf install rhel-system-roles -y
 ----
 
-The resulting output will look similar to the output below.
+.Output
+[source,text]
+----
+<<< OUTPUT ABRIDGED >>>
+Total                                                           15 MB/s | 3.5 MB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Running scriptlet: rhel-system-roles-1.23.0-2.21.el9.noarch   1/1
+  Preparing:                                                    1/1
+  Installing       : rhel-system-roles-1.23.0-2.21.el9.noarch   1/1
+  Verifying        : rhel-system-roles-1.23.0-2.21.el9.noarch   1/1
+Installed products updated.
 
-.srinstalled
-image::srinstalled.png[srinstalled]
+Installed:
+  rhel-system-roles-1.23.0-2.21.el9.noarch
+----

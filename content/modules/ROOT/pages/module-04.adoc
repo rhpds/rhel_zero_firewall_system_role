@@ -1,11 +1,12 @@
-In this challenge we’ll open port 9999 on `rhelvm`.
+Next we will open port 9999 on `*rhelvm*`.
 
-In the link:tab-0[button label=``controlnode''] terminal, add the lines
-`- port: ['9999/tcp']` and `state: enabled` to the `hosts` file.
+In the `*>_ controlnode*` terminal, add the lines
+`*- port: ['9999/tcp']*` and `*state: enabled*` to the `*hosts*` file.
 
 The following command will add those lines for you.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 tee -a /root/hosts << EOF
       - port: ['9999/tcp']
@@ -13,39 +14,57 @@ tee -a /root/hosts << EOF
 EOF
 ----
 
-Now run the playbook in the link:tab-0[button label=``controlnode'']
+Now run the playbook in the `*>_ controlnode*`
 terminal.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 ansible-playbook -i hosts -b firewall.yml
 ----
 
-.applyportopen
-image::applyportopen.png[applyportopen]
+.Output
+[source,text,subs="+macros,+attributes"]
+----
+<<< OUTPUT ABRIDGED >>>
 
-In the link:tab-1[button label=``rhelvm''] terminal, run `nc`, listening
+TASK [redhat.rhel_system_roles.firewall : Configure firewall] *************************************************************
+ok: [rhelvm.{{ guid }}.internal] => (item={'service': 'http', 'state': 'enabled'})
+changed: [rhelvm.{{ guid }}.internal] => (item={'port': ['9999/tcp'], 'state': 'enabled'})
+
+<<< OUTPUT ABRIDGED >>>
+
+TASK [redhat.rhel_system_roles.firewall : Show diffs] *************************************************************
+skipping: [rhelvm.{{ guid }}.internal]
+
+PLAY RECAP *************************************************************
+rhelvm.{{ guid }}.internal      : ok=9    changed=1    unreachable=0    failed=0    skipped=12   rescued=0    ignored=0
+----
+
+In the `*>_ rhelvm*` terminal, run `*nc*`, listening
 on port 9999.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc -l 9999
 ----
 
-In the link:tab-0[button label=``controlnode''] terminal, run `nc` and
-then type some stuff.
+In the `*>_ controlnode*` terminal, run the `*nc*` command:
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc rhelvm 9999
 ----
 
-.ncport9999
-image::ncport9999.png[ncport9999]
+Type words to test connectivity as you did before and press enter.
 
-In the image above the phrase was typed:
-`the quick brown fox jumps over the lazy dogs` followed by the `enter`
-key.
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+the quick brown fox jumps over the lazy dogs
+----
 
-In the link:tab-0[button label=``controlnode''] terminal, type `ctrl-c`
-to exit `nc`.
+In the `*>_ controlnode*` terminal, type `*ctrl-c*`
+to exit `*nc*`.

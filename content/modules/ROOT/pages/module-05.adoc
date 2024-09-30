@@ -1,12 +1,13 @@
 In this challenge we’ll forward incoming tcp requests to rhelvm on port
-9999 to 12345.
+`*9999*` to `*12345*`.
 
-In the link:tab-0[button label=``controlnode''] terminal, add the lines
-`- forward_port: '9999/tcp;12345;'` and `state: enabled`.
+In the `*>_ controlnode*` terminal, add the lines
+`*- forward_port: '9999/tcp;12345;'*` and `*state: enabled*`.
 
 The following command will add those lines for you.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 tee -a /root/hosts << EOF
       - forward_port: '9999/tcp;12345;'
@@ -14,31 +15,55 @@ tee -a /root/hosts << EOF
 EOF
 ----
 
-Now run the playbook in the link:tab-0[button label=``controlnode'']
+Now run the playbook in the `*>_ controlnode*`
 terminal.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 ansible-playbook -i hosts -b firewall.yml
 ----
 
-In the link:tab-1[button label=``rhelvm''] terminal, run `nc`, listening
+.Output
+[source,text,subs="+macros,+attributes"]
+----
+<<< OUTPUT ABRIDGED >>>
+
+TASK [redhat.rhel_system_roles.firewall : Configure firewall] ************************************************************
+ok: [rhelvm.{{ guid }}.internal] => (item={'service': 'http', 'state': 'enabled'})
+ok: [rhelvm.{{ guid }}.internal] => (item={'port': ['9999/tcp'], 'state': 'enabled'})
+changed: [rhelvm.{{ guid }}.internal] => (item={'forward_port': '9999/tcp;12345;', 'state': 'enabled'})
+
+<<< OUTPUT ABRIDGED >>>
+
+PLAY RECAP *************************************************
+rhelvm.{{ guid }}.internal      : ok=9    changed=1    unreachable=0    failed=0    skipped=12   rescued=0    ignored=0
+----
+
+In the `*>_ rhelvm*` terminal, run `*nc*`, listening
 on port 12345.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc -l 12345
 ----
 
-In the link:tab-0[button label=``controlnode''] terminal, run `nc` and
-then type some stuff.
+In the `*>_ controlnode*` terminal, run the `*nc*` command:
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc rhelvm 9999
 ----
 
-.ncport9999
-image::portforward.png[ncport9999]
+Type words to test connectivity as you did before and press enter.
 
-Type `ctrl-c` to exit `nc`.
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+the quick brown fox jumps over the lazy dogs
+----
+
+In the `*>_ controlnode*` terminal, type `*ctrl-c*`
+to exit `*nc*`.

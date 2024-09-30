@@ -4,48 +4,100 @@ installed.
 
 We’ll reset the firewall configuration in the `rhelvm` host.
 
-First, in the link:tab-1[button label=``rhelvm''] terminal, list the
+First, in the `*>_ rhelvm*` terminal, list the
 current rules.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 firewall-cmd --list-all
 ----
 
-In the link:tab-0[button label=``controlnode''] terminal, we’ll create a
-new host file called `reset`.
+.Output
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: eth0
+  sources:
+  services: cockpit dhcpv6-client http ssh
+  ports: 9999/tcp
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+        port=9999:proto=tcp:toport=12345:toaddr=
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
 
-[source,bash,run]
+In the `*>_ controlnode*` terminal, we’ll create a
+new host file called `*reset*`.
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 tee -a /root/reset << EOF
 all:
   hosts:
-    rhelvm:
+    rhelvm.{{ guid }}.internal:
   vars:
     firewall:
       - previous: replaced
 EOF
 ----
 
-From the link:tab-0[button label=``controlnode''] terminal, run the
-playbook to reset the firewall rules on the `rhelvm` host.
+From the `*>_ controlnode*` terminal, run the
+playbook to reset the firewall rules on the `*rhelvm*` host.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 ansible-playbook -i reset -b firewall.yml
 ----
 
-.reset output
-image::resetplaybook.png[reset output]
+.Output
+[source,text,subs="+macros,+attributes"]
+----
+<<< OUTPUT ABRIDGED >>>
 
-When the playbook as stopped running, switch to the link:tab-1[button
-label=``rhelvm''] terminal and check that the firewall rules have been
-reset.
+TASK [redhat.rhel_system_roles.firewall : Calculate what has changed] ************************************************************
+changed: [rhelvm.{{ guid }}.internal]
 
-[source,bash,run]
+<<< OUTPUT ABRIDGED >>>
+
+PLAY RECAP *************************************************
+rhelvm.{{ guid }}.internal      : ok=9    changed=1    unreachable=0    failed=0    skipped=12   rescued=0    ignored=0
+----
+
+When the playbook as stopped running, switch to the `*>_ rhelvm*` terminal and check that the firewall rules have been reset.
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 firewall-cmd --list-all
 ----
 
+.Output
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: eth0
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports:
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
+
 If you want to apply the rules we created in the previous steps of this
-lab, simply run `ansible-playbook -i hosts -b firewall.yml` again.
+lab, run `*ansible-playbook -i hosts -b firewall.yml*` again on the `*>_ controlnode*`

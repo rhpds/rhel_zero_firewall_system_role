@@ -1,70 +1,98 @@
 In this challenge, we will enable access to the http port 80 on
-`rhelvm`.
+`*rhelvm*`.
 
 First, we’ll prove to ourselves that port 80 is blocked by the firewall
-running on `rhelvm`.
+running on `*rhelvm*`.
 
-Switch to the link:tab-1[button label=``rhelvm''] terminal by clicking
-on this button: link:tab-1[button label=``rhelvm''].
+Switch to the `*rhelvm*` terminal by clicking
+on this button:
 
-Run the following in link:tab-1[button label=``rhelvm''].
+.rhelvm tab
+image::rhelvm-tab.png[rhelvm tab]
 
-[source,bash,run]
+Run the following in in the `*rhelvm*` tab:
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 firewall-cmd --list-all
 ----
 
-.fwcmdno80
-image::fwcmdno80.png[fwcmdno80]
+.Output
+[source,text]
+----
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: eth0
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports:
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
 
 The output above shows that port 80 is not open.
 
-In the `rhelvm` terminal, run `nc -l 80`. This command runs the utility
-`netcat` and tells it to listen for incoming traffic on port 80.
+In the `*rhelvm*` terminal, run `*nc -l 80*`. This command runs the utility
+`*netcat*` and tells it to listen for incoming traffic on port 80.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc -l 80
 ----
 
-.nclistening
-image::nclistening.png[nclistening]
+.Output
+[source,text]
+----
+nc -l 80
 
-`netcat` is now listening on port 80 on `rhelvm`.
+----
 
-____
-[!WARNING] Do not exit out of `nc` in this terminal!
-____
+`*netcat*` is now listening on port 80 on `*rhelvm*`.
 
-Switch back to the link:tab-0[button label=``controlnode''] terminal.
+IMPORTANT: The `*nc*` command continues listening until cancled. Do not exit out of `*nc*` in this terminal until instructed to do so.
 
-Enter the command `nc rhelvm 80`. This tells `netcat` to connect to port
-80 on `rhelvm`.
+Switch back to the `*>_ controlnode*' terminal.
 
-[source,bash,run]
+Enter the command `*nc rhelvm 80*`. This tells `netcat` to connect to port
+80 on `*rhelvm*`.
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc rhelvm 80
 ----
 
-.noroute
-image::no-route.png[noroute]
+.Output (Failure expected)
+[source,text,subs="+macros,+attributes"]
+----
+[root@controlnode ~]# nc rhelvm.{{ guid }}.internal 80
+Ncat: No route to host.
+----
 
-`netcat` cannot connect to `rhelvm` on port 80.
+`*netcat*` cannot connect to `*rhelvm*` on port 80.
 
-Let’s use RHEL systems roles to open up port 80 on `rhelvm`.
+Use the recently installed RHEL systems roles to open up port 80 on `*rhelvm*`.
 
-First, Ansible requires a host file pointing at the `rhelvm` host. The
+First, Ansible requires a host file pointing at the `*rhelvm*` host. The
 host file looks like this.
 
-Copy and paste the following into the link:tab-0[button
-label=``controlnode''] terminal.
+Copy and paste the following into the `*>_ controlnode*' terminal.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 tee -a /root/hosts << EOF
 all:
   hosts:
-    rhelvm:
+    rhelvm.{{ guid }}.internal:
   vars:
     firewall:
       - service: http
@@ -77,7 +105,8 @@ the RHEL Firewall system role.
 
 Copy paste and run the following in the CLI.
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 tee -a /root/firewall.yml <<EOF
 - name: Configure Firewall
@@ -87,43 +116,81 @@ tee -a /root/firewall.yml <<EOF
 EOF
 ----
 
-Now we’ll apply the system role to `rhelvm` by running the following
-command on link:tab-0[button label=``controlnode''] .
+Now we’ll apply the system role to `*rhelvm*` by running the following
+command on `*>_ controlnode*'
 
-[source,bash,run]
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 ansible-playbook -i hosts -b firewall.yml
 ----
 
-.applysystemrole
-image::applysystemrole.png[applysystemrole]
+.Output
+[source,text,subs="+macros,+attributes"]
+----
+<<< OUTPUT ABRIDGED >>>
 
-Run `nc rhelvm 80` in the link:tab-0[button label=``controlnode'']
-terminal again.
+TASK [redhat.rhel_system_roles.firewall : Configure firewall] ************************************************************
+changed: [rhelvm.{{ guid }}.internal] => (item={'service': 'http', 'state': 'enabled'})
 
-[source,bash,run]
+<<< OUTPUT ABRIDGED >>>
+
+PLAY RECAP *************************************************
+rhelvm.{{ guid }}.internal      : ok=9    changed=1    unreachable=0    failed=0    skipped=12   rescued=0    ignored=0
+----
+
+Run `*nc rhelvm 80*` in the `*>_ controlnode*' terminal again.
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 nc rhelvm 80
 ----
 
-We’ll type something into the terminal and hit enter. You should see it
-printed out in the link:tab-1[button label=``rhelvm''] terminal.
+IMPORTANT: Once the command is executed the terminal will await further input. This allows us to test connectivity.
 
-.ncresult80
-image::ncport80.png[ncresult80]
+Enter text into the terminal and press the enter key.
 
-Exit out of `nc` in the link:tab-0[button label=``controlnode'']
-terminal by typing `ctrl-c`. This will cause `nc` to exit in
-link:tab-1[button label=``rhelvm''].
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
+----
+the quick brown fox jumps over the lazy dogs
+----
 
-Finally, we’ll use `firewall-cmd` to list the open ports on
-link:tab-1[button label=``rhelvm'']. Switch to the link:tab-1[button
-label=``rhelvm''] terminal and run the following command.
+Exit out of `*nc*` command after entering the text on the `*>_ controlnode*` terminal by typing `*ctrl-c*`. This will cause `*nc*` to exit in the `*rhelvm*` tab.
 
-[source,bash,run]
+Finally, we’ll use `*firewall-cmd*` to list the open ports on
+`*>_ rhelvm*`.
+
+Switch to the `*>_ rhelvm*` terminal.
+
+NOTE: You will see the quote you entered quote on this terminal as well.
+
+Run the following command to list the active firewall rules.
+
+.Command
+[source,bash,subs="+macros,+attributes",role=execute]
 ----
 firewall-cmd --list-all
 ----
 
-.fwcmdlistall80
-image::fwcmdlistall80.png[fwcmdlistall80]
+.Output
+[source,text]
+----
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: eth0
+  sources:
+  services: cockpit dhcpv6-client http ssh
+  ports:
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
+
+The `*http*` service was added to the firewall rules by ansible.
