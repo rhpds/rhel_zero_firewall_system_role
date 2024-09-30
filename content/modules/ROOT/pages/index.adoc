@@ -1,4 +1,5 @@
 NOTE: To make the inline images larger, expand this window.
+
 image:zt-slider.png[Menu Slider]
 
 This lab is composed of two hosts.
